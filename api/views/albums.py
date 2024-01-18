@@ -315,7 +315,7 @@ class AlbumDateViewSet(viewsets.ModelViewSet):
         photoFilter.append(Q(aspect_ratio__isnull=False))
         albumDateFilter.append(Q(photos__aspect_ratio__isnull=False))
 
-        if not self.request.user.is_anonymous:
+        if not self.request.user.is_anonymous and not self.request.query_params.get("username"):
             photoFilter.append(Q(owner=self.request.user))
             albumDateFilter.append(Q(photos__owner=self.request.user))
 
@@ -473,7 +473,7 @@ class AlbumDateListViewSet(ListViewSet):
         else:
             filter.append(Q(photos__deleted=False))
 
-        if not self.request.user.is_anonymous:
+        if not self.request.user.is_anonymous and not self.request.query_params.get("username"):
             filter.append(Q(owner=self.request.user))
             filter.append(Q(photos__owner=self.request.user))
 
