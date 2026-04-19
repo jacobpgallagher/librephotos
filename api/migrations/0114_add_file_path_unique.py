@@ -165,10 +165,13 @@ class Migration(migrations.Migration):
 
     operations = [
         # First, deduplicate existing paths
+        migrations.RunSQL('SET CONSTRAINTS ALL IMMEDIATE;'),
         migrations.RunPython(
             deduplicate_file_paths,
             reverse_deduplicate,
         ),
+        migrations.RunSQL('SET CONSTRAINTS ALL DEFERRED;'),
+
         # Then add the unique constraint
         migrations.AlterField(
             model_name='file',
