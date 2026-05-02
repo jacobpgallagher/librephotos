@@ -872,7 +872,7 @@ class UnifiedMediaAccessView(APIView):
                 .only("id", "transcode_videos")
                 .first()
             )
-            if photo.owner == user or user in photo.shared_to.all():
+            if photo.public or photo.owner == user or photo.shared_to.contains(user) or photo.albumuser_set.filter(shared_to=user).exists():
                 if use_proxy:
                     return self._generate_response_proxy(
                         photo, path, fname, user.transcode_videos
@@ -880,16 +880,7 @@ class UnifiedMediaAccessView(APIView):
                 return self._generate_response_direct(
                     photo, path, fname, user.transcode_videos
                 )
-            else:
-                for album in photo.albumuser_set.only("shared_to", "public"):
-                    if getattr(album, "public", False) or user in album.shared_to.all():
-                        if use_proxy:
-                            return self._generate_response_proxy(
-                                photo, path, fname, user.transcode_videos
-                            )
-                        return self._generate_response_direct(
-                            photo, path, fname, user.transcode_videos
-                        )
+
             return HttpResponse(status=404)
 
         # Original photos (path == photos)

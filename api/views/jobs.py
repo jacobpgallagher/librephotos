@@ -18,7 +18,7 @@ class LongRunningJobViewSet(viewsets.ModelViewSet):
             ),
         )
         .all()
-        .order_by("-started_at")
+        .order_by('finished', "-started_at")
     )
     serializer_class = LongRunningJobSerializer
     pagination_class = TinyResultsSetPagination

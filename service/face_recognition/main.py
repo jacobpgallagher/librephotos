@@ -6,12 +6,14 @@ from PIL import Image
 from flask import Flask, request
 from gevent.pywsgi import WSGIServer
 
+import os
+
 app = Flask(__name__)
 
 last_request_time = None
 face_analysis_models = {}
 DEFAULT_MODEL_NAME = "buffalo_sc"
-FACE_MODEL_ROOT = "/protected_media/data_models/face_recognition"
+FACE_MODEL_ROOT = os.path.join(os.environ.get("BASE_DATA", "/"), 'protected_media', 'data_models','face_recognition')
 SUPPORTED_FACE_MODELS = {
     "antelopev2",
     "buffalo_l",
